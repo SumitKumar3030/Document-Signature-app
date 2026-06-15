@@ -74,8 +74,11 @@ exports.finalizeDocument = async (req, res) => {
   pdfUrl: `http://localhost:5000/signed-documents/${signedFileName}`,
 });
   } catch (error) {
-    res.status(500).json({
-      message: error.message,
-    });
-  }
+  console.error("FINALIZE PDF ERROR:", error);
+
+  res.status(500).json({
+    success: false,
+    message: error.message,
+  });
+}
 };
