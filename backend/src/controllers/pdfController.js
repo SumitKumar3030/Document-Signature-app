@@ -22,36 +22,29 @@ exports.finalizeDocument = async (req, res) => {
       });
     }
 
-    const pdfBytes = fs.readFileSync(
-      document.filePath
-    );
+    const pdfPath = path.join(__dirname, "../../", document.filePath);
 
-    const pdfDoc =
-      await PDFDocument.load(pdfBytes);
+    console.log("PDF PATH:", pdfPath);
+
+    const pdfBytes = fs.readFileSync(pdfPath);
+
+    const pdfDoc = await PDFDocument.load(pdfBytes);
 
     const pages = pdfDoc.getPages();
 
     const firstPage = pages[0];
 
-    firstPage.drawText(
-      `Digitally Signed By: ${signerName}`,
-      {
-        x: 50,
-        y: 50,
-        size: 18,
-      }
-    );
+    firstPage.drawText(`Digitally Signed By: ${signerName}`, {
+      x: 50,
+      y: 50,
+      size: 18,
+    });
 
-    const signedPdfBytes =
-      await pdfDoc.save();
+    const signedPdfBytes = await pdfDoc.save();
 
-    const signedFileName =
-      `signed-${Date.now()}.pdf`;
+    const signedFileName = `signed-${Date.now()}.pdf`;
 
-    const signedDir = path.join(
-      __dirname,
-      "../signed-documents"
-    );
+    const signedDir = path.join(__dirname, "../signed-documents");
 
     if (!fs.existsSync(signedDir)) {
       fs.mkdirSync(signedDir, {
@@ -59,26 +52,20 @@ exports.finalizeDocument = async (req, res) => {
       });
     }
 
-    const signedPath = path.join(
-      signedDir,
-      signedFileName
-    );
+    const signedPath = path.join(signedDir, signedFileName);
 
-    fs.writeFileSync(
-      signedPath,
-      signedPdfBytes
-    );
+    fs.writeFileSync(signedPath, signedPdfBytes);
 
     res.status(200).json({
-  success: true,
-  pdfUrl: `http://localhost:5000/signed-documents/${signedFileName}`,
-});
+      success: true,
+      pdfUrl: `http://localhost:5000/signed-documents/${signedFileName}`,
+    });
   } catch (error) {
-  console.error("FINALIZE PDF ERROR:", error);
+    console.error("FINALIZE PDF ERROR:", error);
 
-  res.status(500).json({
-    success: false,
-    message: error.message,
-  });
-}
+    res.status(500).json({
+      success: false,
+      message: error.message,
+    });
+  }
 };
