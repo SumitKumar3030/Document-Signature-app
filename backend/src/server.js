@@ -22,15 +22,13 @@ connectDB();
 
 const app = express();
 
-app.use(
-  cors({
-    origin: [
-      "http://localhost:3000",
-      process.env.FRONTEND_URL,
-    ],
-    credentials: true,
-  })
-);
+cors({
+  origin: [
+    "http://localhost:3000",
+    "https://document-signature-app-jet.vercel.app",
+  ],
+  credentials: true,
+})
 
 app.use(express.json());
 app.use(cookieParser());
