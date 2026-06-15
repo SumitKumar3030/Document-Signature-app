@@ -71,7 +71,7 @@ exports.finalizeDocument = async (req, res) => {
 
     res.status(200).json({
   success: true,
-  pdfUrl: `https://document-signature-app-skwy.onrender.com/signed-documents/${signedFileName}`,
+  pdfUrl: `http://localhost:5000/signed-documents/${signedFileName}`,
 });
   } catch (error) {
     res.status(500).json({
